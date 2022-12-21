@@ -7,6 +7,11 @@
 - [ ] Virtual render
 - [ ] Documentation
 
+### Install
+```shell
+npm i vue3-pager
+```
+
 ### Example 
 ![Demo](demo/demo.gif)
 ```vue
