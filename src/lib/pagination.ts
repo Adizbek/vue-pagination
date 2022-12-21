@@ -1,4 +1,4 @@
-import { computed, onBeforeMount, reactive, UnwrapNestedRefs } from "vue";
+import {computed, reactive, Ref, ToRefs, toRefs, UnwrapNestedRefs} from "vue";
 
 type LoadDataFunction<T> = (page: number, payload?: T) => Promise<boolean>;
 
@@ -18,9 +18,10 @@ interface PaginationData<T> {
   loadData: LoadDataFunction<T>;
 }
 
-export type Pagination<T> = {
-  pagination: UnwrapNestedRefs<PaginationData<T>>;
-  loadMore: () => Promise<void>;
+export type Pagination<T> =
+  ToRefs<PaginationData<T> extends Ref ? PaginationData<T> : UnwrapNestedRefs<PaginationData<T>>>
+  & {
+  loadMore:  () => Promise<boolean>;
 };
 
 export function usePagination<T>(
@@ -37,8 +38,8 @@ export function usePagination<T>(
     return data.hasMore && !data.loading;
   });
 
-  async function loadMore() {
-    if (!canTrigger.value) return;
+  async function loadMore(): Promise<boolean> {
+    if (!canTrigger.value) return false;
 
     data.loading = true;
 
@@ -56,14 +57,12 @@ export function usePagination<T>(
     }
 
     data.loading = false;
+
+    return data.hasMore;
   }
 
-  onBeforeMount(async () => {
-    await loadMore();
-  });
-
   return {
-    pagination: data,
+    ...toRefs(data),
     loadMore,
   };
 }

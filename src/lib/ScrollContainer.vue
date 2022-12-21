@@ -1,21 +1,16 @@
 <template>
-  <div ref="container">
+  <div ref="container" style="overflow: auto; height: 100%">
     <slot></slot>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {defineProps, onMounted, ref, watch} from "vue";
+import {defineProps, nextTick, onMounted, ref} from "vue";
 
 const props = defineProps({
   triggerLoad: {
     required: true,
     type: Function
-  },
-
-  page: {
-    required: true,
-    type: Number
   },
 
   reverse: {
@@ -48,21 +43,44 @@ onMounted(() => {
 
   function parentFilled() {
     if (div) {
-      return div?.clientHeight >= (div.parentElement?.clientHeight ?? 0)
+      return (div.scrollHeight - props.threshold) >= (div.parentElement?.clientHeight ?? 0)
     } else {
       return false;
     }
   }
 
-  watch(() => props.page, () => {
-    if (!parentFilled()) {
-      props.triggerLoad();
+  function prefilled() {
+    if (div) {
+      return div.children.length > 0
     }
-  })
+
+    return false;
+  }
+
+  async function autoLoadToFitContent() {
+    async function load() {
+      const hasMore = await props.triggerLoad();
+
+      if (hasMore) {
+        await nextTick()
+
+        console.log(parentFilled())
+        if (!parentFilled())
+          await load();
+      }
+    }
+
+    // We load contents if it's empty container or has items and items doesn't fit parent
+    if (!prefilled() || (prefilled() && !parentFilled()))
+      await load();
+  }
+
+  autoLoadToFitContent();
 
   div.addEventListener('scroll', (e: Event) => {
     const element = e.target as HTMLElement;
 
+    console.log('Here')
     if (hasReachedEnd(element)) {
       props.triggerLoad()
     }

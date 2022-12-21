@@ -1,14 +1,14 @@
 <template>
   <div>
-    <div style="height: 400px; width: 400px; background: #333; color: wheat; overflow: auto">
-      <ScrollContainer :trigger-load="pag.loadMore" :page="pag.pagination.page">
-        <div v-for="it in items" :key="it">
-          {{ it }}
-        </div>
+    <div style="height: 400px; width: 400px; background: #333; color: wheat;">
+      <ScrollContainer :trigger-load="dummyPaginator.loadMore">
+        <div v-for="it in items" :key="it" v-html="it"/>
       </ScrollContainer>
     </div>
 
-    <button @click="pag.loadMore">More</button>
+    <div>Page is {{ dummyPaginator.page }}</div>
+
+    <button @click="dummyPaginator.loadMore()">More</button>
   </div>
 </template>
 
@@ -24,21 +24,27 @@ export default defineComponent({
   setup() {
     const items = ref<string[]>([]);
 
-    const pag = usePagination({
-      async loadData(page: number) {
-        if (process.env.NODE_ENV !== 'production')
-          console.log('Page', page);
+    async function generateItemsForPage(page: number): Promise<boolean> {
+      if (process.env.NODE_ENV !== 'production')
+        console.log('Page', page);
 
-        for (let i = 0; i < 10; i++) {
-          items.value.push('' + ((i + (page - 1) * 10) + 1))
-        }
+      const newItems = new Array(10).fill(0).map((v, i) => {
+        return '' + ((i + (page - 1) * 10) + 1);
+      })
 
-        return true;
-      }
-    })
+      // simulate network load
+      await new Promise((resolve) => {
+        setTimeout(resolve, 350)
+      })
 
+      items.value.push(...newItems)
 
-    return {items, pag};
+      return true;
+    }
+
+    const dummyPaginator = usePagination({loadData: generateItemsForPage})
+
+    return {items, dummyPaginator};
   }
 })
 </script>

@@ -1,29 +1,63 @@
 # vue-pagination
 
-## Project setup
-```
-npm install
-```
+### Roadmap
+- [x] usePagination
+- [x] useMultiPagination
+- [x] Scrollable container component
+- [ ] Virtual render
+- [ ] Documentation
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### Example 
+![Demo](demo/demo.gif)
+```vue
+<template>
+  <div>
+    <div style="height: 400px; width: 400px; background: #333; color: wheat;">
+      <ScrollContainer :trigger-load="dummyPaginator.loadMore">
+        <div v-for="it in items" :key="it" v-html="it"/>
+      </ScrollContainer>
+    </div>
 
-### Compiles and minifies for production
-```
-npm run build
-```
+    <div>Page is {{ dummyPaginator.page }}</div>
 
-### Run your unit tests
-```
-npm run test:unit
-```
+    <button @click="dummyPaginator.loadMore()">More</button>
+  </div>
+</template>
 
-### Lints and fixes files
-```
-npm run lint
-```
+<script lang="ts">
+import {defineComponent, ref} from "vue";
+import ScrollContainer from "@/lib/ScrollContainer.vue";
+import {usePagination} from "@/lib/pagination";
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+export default defineComponent({
+  name: "DummyEndlessScroll",
+  components: {ScrollContainer},
+
+  setup() {
+    const items = ref<string[]>([]);
+
+    async function generateItemsForPage(page: number): Promise<boolean> {
+      if (process.env.NODE_ENV !== 'production')
+        console.log('Page', page);
+
+      const newItems = new Array(10).fill(0).map((v, i) => {
+        return '' + ((i + (page - 1) * 10) + 1);
+      })
+
+      // simulate network load
+      await new Promise((resolve) => {
+        setTimeout(resolve, 350)
+      })
+
+      items.value.push(...newItems)
+
+      return true;
+    }
+
+    const dummyPaginator = usePagination({loadData: generateItemsForPage})
+
+    return {items, dummyPaginator};
+  }
+})
+</script>
+```
