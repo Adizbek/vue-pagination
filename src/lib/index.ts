@@ -1,8 +1,8 @@
-import {useMultiPagination, usePagination} from "@/lib/pagination";
-import ScrollContainer from "@/lib/ScrollContainer.vue";
+import {useMultiPagination, usePagination} from "./pagination";
+import ScrollContainer from "./ScrollContainer.vue";
 
-export default {
-  usePagination,
-  useMultiPagination,
+export {
   ScrollContainer,
+  usePagination,
+  useMultiPagination
 }

@@ -11,7 +11,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "npm run build:lib && npm run gen-types",
-    "build:lib": "vue-cli-service build --target lib --name VuePagination  src/lib/index.ts",
+    "build:lib": "vue-cli-service build --target lib --name VuePagination src/lib/index.ts",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "gen-types": "tsc -d --emitDeclarationOnly && vue-typegen gen -s src/lib -o dist",
