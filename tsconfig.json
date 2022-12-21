@@ -12,14 +12,15 @@
     "useDefineForClassFields": true,
     "sourceMap": true,
     "declaration": true,
-    "baseUrl": ".",
+    "baseUrl": "src",
+    "outDir": "dist",
     "types": [
       "webpack-env",
       "jest"
     ],
     "paths": {
       "@/*": [
-        "src/*"
+        "*"
       ]
     },
     "lib": [
@@ -33,10 +34,11 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
+//    "tests/**/*.ts",
+//    "tests/**/*.tsx"
   ],
   "exclude": [
+    "tests",
     "node_modules"
   ]
 }
