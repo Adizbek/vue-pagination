@@ -1,21 +1,19 @@
 {
   "name": "vue3-pager",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "private": false,
   "author": {
     "email": "adizbek1998@gmail.com",
     "name": "Adizbek Ergashev"
   },
   "main": "dist/VuePagination.common.js",
-  "types": "dist/lib/index.d.ts",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "npm run build:lib && npm run gen-types",
-    "build:lib": "vue-cli-service build --target lib --name VuePagination src/lib/index.ts",
+    "build": "npm run build:lib",
+    "build:lib": "vue-cli-service build --target lib --name VuePagination src/lib/index.ts --formats=commonjs --filename=VuePagination",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "gen-types": "tsc -d --emitDeclarationOnly && vue-typegen gen -s src/lib -o dist",
-    "prepare": "npm run build"
+    "gen-types": "tsc -d --emitDeclarationOnly"
   },
   "repository": {
     "type": "git",
