@@ -14,6 +14,10 @@
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Adizbek/vue-pagination"
+  },
   "dependencies": {
     "core-js": "^3.8.3",
     "vue": "^3.2.13"

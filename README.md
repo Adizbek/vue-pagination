@@ -37,9 +37,6 @@ export default defineComponent({
     const items = ref<string[]>([]);
 
     async function generateItemsForPage(page: number): Promise<boolean> {
-      if (process.env.NODE_ENV !== 'production')
-        console.log('Page', page);
-
       const newItems = new Array(10).fill(0).map((v, i) => {
         return '' + ((i + (page - 1) * 10) + 1);
       })
